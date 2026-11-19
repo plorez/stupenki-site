@@ -5,9 +5,9 @@ const MENU = require('./menu.json'); // создаётся из меню на с
 const MAX_ITEMS = 30;
 const MAX_QTY = 20;
 
-const reply = (code, obj) => ({
+const baseReply = (code, obj, extra) => ({
   statusCode: code,
-  headers: { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' },
+  headers: { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store', ...extra },
   body: JSON.stringify(obj),
 });
 const esc = (s) => String(s).replace(/[&<>]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]));
@@ -15,6 +15,20 @@ const clean = (s, n) => String(s == null ? '' : s).replace(/[\x00-\x1f\x7f]+/g, 
 const money = (t) => (t / 10).toFixed(1) + ' BYN';
 
 exports.handler = async (event) => {
+  // Кто может отправлять заказы с другого сайта (например, с GitHub Pages). Список меняется в настройках Netlify: ALLOWED_ORIGINS.
+  const h = event.headers || {};
+  const origin = h.origin || h.Origin || '';
+  const host = h.host || h.Host || '';
+  const allowed = (process.env.ALLOWED_ORIGINS || 'https://plorez.github.io').split(',').map((x) => x.trim()).filter(Boolean);
+  let sameOrigin = false;
+  try { sameOrigin = !!origin && new URL(origin).host === host; } catch (e) { /* игнорируем */ }
+  const cors = origin && allowed.includes(origin)
+    ? { 'Access-Control-Allow-Origin': origin, Vary: 'Origin', 'Access-Control-Allow-Methods': 'POST, OPTIONS', 'Access-Control-Allow-Headers': 'Content-Type' }
+    : { Vary: 'Origin' };
+  const reply = (code, obj) => baseReply(code, obj, cors);
+  if (origin && !sameOrigin && !allowed.includes(origin)) return reply(403, { ok: false, error: 'origin' });
+  if (event.httpMethod === 'OPTIONS') return { statusCode: 204, headers: cors, body: '' };
+
   if (event.httpMethod !== 'POST') return reply(405, { ok: false, error: 'method' });
 
   const token = process.env.TELEGRAM_BOT_TOKEN;

@@ -23,11 +23,18 @@ const run = async (name, fn) => { sent = []; tgStatus = 200; await fn(); console
     assert.equal(j.test, false); assert(!sent[0].body.text.includes('ТЕСТОВЫЙ'));
   });
   await run('новые чаи есть, старые дубли убраны', async () => {
-    for (const id of ['Чай|Чёрный чай|350 мл','Чай|Чёрный чай|700 мл','Чай|Ройбуш|350 мл','Чай|Гречишный чай|700 мл','Чай|Чай облепиха|','Чай|Чай имбирь-лимон-мёд|']) assert(MENU[id], id);
-    for (const id of ['Кофе|Чай листовой|350 мл','Сезонное|Чай облепиха|']) assert(!MENU[id], id);
-    assert.equal(MENU['Чай|Зелёный чай|700 мл'].p, 75); assert.equal(MENU['Чай|Чай клюква|'].p, 80);
-    const r = await post({ ...good(), items: [{ id: 'Чай|Чёрный чай|700 мл', q: 1 }, { id: 'Чай|Чай облепиха|', q: 2 }] });
-    assert.equal(r.statusCode, 200); assert(sent[0].body.text.includes('Итого: 23.5 BYN'));
+    for (const id of ['Чай|Чёрный чай: бергамот|350 мл','Чай|Зелёный чай: жасмин|700 мл','Чай|Зелёный чай: 7 самураев (фруктовый)|350 мл','Чай|Ройбуш|350 мл','Чай|Гречишный чай|700 мл','Чай|Чай на основе пюре: облепиховый|']) assert(MENU[id], id);
+    for (const id of ['Кофе|Чай листовой|350 мл','Сезонное|Чай облепиха|','Чай|Чай облепиха|']) assert(!MENU[id], id);
+    assert.equal(MENU['Чай|Зелёный чай: жасмин|700 мл'].p, 75); assert.equal(MENU['Чай|Чай на основе пюре: клюквенный|'].p, 80);
+    const r = await post({ ...good(), items: [{ id: 'Чай|Чёрный чай: бергамот|700 мл', q: 1 }, { id: 'Чай|Чай на основе пюре: облепиховый|', q: 2 }] });
+    assert.equal(r.statusCode, 200); assert(sent[0].body.text.includes('Итого: 23.5 BYN') && sent[0].body.text.includes('Чёрный чай: бергамот (700 мл)'));
+  });
+  await run('CORS: GitHub Pages разрешён, чужой сайт и предзапрос', async () => {
+    const withH = (origin, extra = {}) => handler({ httpMethod: 'POST', headers: { origin, host: 'shop.netlify.app', ...extra }, body: JSON.stringify(good()) });
+    let r = await withH('https://plorez.github.io'); assert.equal(r.statusCode, 200); assert.equal(r.headers['Access-Control-Allow-Origin'], 'https://plorez.github.io');
+    sent = []; r = await withH('https://evil.example'); assert.equal(r.statusCode, 403); assert.equal(sent.length, 0); assert(!r.headers['Access-Control-Allow-Origin']);
+    r = await withH('https://shop.netlify.app'); assert.equal(r.statusCode, 200);
+    r = await handler({ httpMethod: 'OPTIONS', headers: { origin: 'https://plorez.github.io', host: 'shop.netlify.app' } }); assert.equal(r.statusCode, 204); assert(r.headers['Access-Control-Allow-Methods'].includes('POST'));
   });
   await run('GET запрещён', async () => assert.equal((await post('', 'GET')).statusCode, 405));
   await run('битый JSON', async () => assert.equal((await post('{oops')).statusCode, 400));

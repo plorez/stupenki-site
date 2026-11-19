@@ -78,13 +78,18 @@ footer{font-size:.85rem;color:#a7b7b4;text-align:center;padding:2rem 1rem calc(2
 /* меню: заголовки групп и примечания */
 .menu .gh{grid-column:1/-1;display:block;font-weight:700;font-size:1.05rem;color:var(--gold);padding:1.1rem 0 .5rem}
 .menu .nt{grid-column:1/-1;display:block;font-size:.85rem;color:var(--muted);border-bottom:0;padding:.6rem 0}
-/* строки меню: не вылезают за карточку при любом шрифте */
+/* меню: название слева, цены справа на одной линии */
+.menu .sh{grid-column:1/-1;display:block;font-weight:700;padding:1rem 0 .2rem;border-bottom:0}
+.menu .sh:empty{padding:.3rem 0 0}
 .menu{grid-template-columns:minmax(0,1fr)}
 @media(min-width:800px){.menu{grid-template-columns:repeat(2,minmax(0,1fr))}}
-.menu li{flex-wrap:wrap;row-gap:.5rem;min-width:0}
-.menu .n{flex:1 1 11rem;min-width:0;overflow-wrap:break-word}
-.chips{flex:0 1 auto;flex-wrap:wrap;margin-left:auto;justify-content:flex-end;max-width:100%}
-.chip{padding:.3rem .7rem;font-size:.8rem}
+.menu li{flex-wrap:nowrap;align-items:center;gap:.7rem;min-width:0;padding:.6rem 0}
+.menu .n{flex:1 1 0;min-width:0;overflow-wrap:break-word;-webkit-hyphens:auto;hyphens:auto}
+.chips{display:flex;flex:0 0 auto;flex-wrap:nowrap;gap:.35rem;margin-left:0}
+.chip{flex:0 0 auto;display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:3.6rem;min-height:46px;padding:.2rem .5rem;line-height:1.15;font-size:.9rem}
+.chip small{font-size:.68rem;font-weight:500;opacity:.85}
+@media(min-width:560px){.chip{flex-direction:row;gap:.35rem;min-height:40px;padding:.3rem .8rem;font-size:.85rem}.chip small{font-size:.8rem}}
+@media(max-width:380px){.menu .n{font-size:.95rem}.menu li{gap:.5rem}.chip{min-width:3.2rem;padding:.2rem .4rem}}
 /* v2: навигация, первый экран, единый стиль */
 :root{--r:16px;--st:clamp(22px,4vw,44px)}
 html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 64px)}
@@ -194,7 +199,7 @@ header.top .wrap{display:flex;align-items:center;gap:.8rem;min-height:64px}
 <dt>Время работы</dt><dd>Уточняется</dd>
 <dt>Instagram</dt><dd><a href="https://www.instagram.com/stupenki.brest/" target="_blank" rel="noopener">@stupenki.brest</a></dd>
 </dl>
-<div class="btns" style="margin-top:1.6rem"><a class="btn fill" href="https://www.google.com/maps/dir/?api=1&destination=Gogolya+59+Brest+Belarus" target="_blank" rel="noopener">Построить маршрут</a><a class="btn line" href="https://www.google.com/maps/search/?api=1&query=Gogolya+59+Brest+Belarus" target="_blank" rel="noopener">Открыть на карте</a></div>
+<div class="btns" style="margin-top:1.6rem"><a class="btn fill" href="https://www.google.com/maps/dir/?api=1&destination=%D0%91%D1%80%D0%B5%D1%81%D1%82%2C%20%D1%83%D0%BB%D0%B8%D1%86%D0%B0%20%D0%93%D0%BE%D0%B3%D0%BE%D0%BB%D1%8F%2C%2059%2C%20%D0%91%D0%B5%D0%BB%D0%B0%D1%80%D1%83%D1%81%D1%8C" target="_blank" rel="noopener">Построить маршрут</a><a class="btn line" href="https://www.google.com/maps/search/?api=1&query=%D0%91%D1%80%D0%B5%D1%81%D1%82%2C%20%D1%83%D0%BB%D0%B8%D1%86%D0%B0%20%D0%93%D0%BE%D0%B3%D0%BE%D0%BB%D1%8F%2C%2059%2C%20%D0%91%D0%B5%D0%BB%D0%B0%D1%80%D1%83%D1%81%D1%8C" target="_blank" rel="noopener">Открыть на карте</a></div>
 </div>
 <div class="ph" style="aspect-ratio:4/3" role="img" aria-label="Схема проезда">Здесь будет карта</div>
 </div>
@@ -202,7 +207,7 @@ header.top .wrap{display:flex;align-items:center;gap:.8rem;min-height:64px}
 
 <section class="final">
 <div class="wrap"><h2>Заходите на кофе</h2><p>Брест, ул. Гоголя, 59</p>
-<div class="btns"><a class="btn fill" href="https://www.google.com/maps/dir/?api=1&destination=Gogolya+59+Brest+Belarus" target="_blank" rel="noopener">Построить маршрут</a></div></div>
+<div class="btns"><a class="btn fill" href="https://www.google.com/maps/dir/?api=1&destination=%D0%91%D1%80%D0%B5%D1%81%D1%82%2C%20%D1%83%D0%BB%D0%B8%D1%86%D0%B0%20%D0%93%D0%BE%D0%B3%D0%BE%D0%BB%D1%8F%2C%2059%2C%20%D0%91%D0%B5%D0%BB%D0%B0%D1%80%D1%83%D1%81%D1%8C" target="_blank" rel="noopener">Построить маршрут</a></div></div>
 </section>
 <footer>© Ступеньки, Брест. Демонстрационная концепция сайта, не является официальным сайтом заведения.</footer>
 
@@ -212,7 +217,7 @@ header.top .wrap{display:flex;align-items:center;gap:.8rem;min-height:64px}
 <nav class="dl"><a href="#about">О кофейне</a><a href="#menu">Меню</a>
 <div class="sub"><a href="#menu" data-cat="Кофе">Кофе</a><a href="#menu" data-cat="Авторские">Авторские напитки</a><a href="#menu" data-cat="Чай">Чай</a><a href="#menu" data-cat="Сезонное">Сезонное меню</a><a href="#menu" data-cat="Лето">Летнее меню</a><a href="#menu" data-cat="Десерты">Десерты</a><a href="#menu" data-cat="Добавки">Добавки</a></div>
 <a href="#gallery">Галерея</a><a href="#contacts">Как нас найти</a></nav>
-<div class="df"><p>Брест, ул. Гоголя, 59</p><a class="btn fill" href="https://www.google.com/maps/dir/?api=1&destination=Gogolya+59+Brest+Belarus" target="_blank" rel="noopener">Построить маршрут</a><a href="https://www.instagram.com/stupenki.brest/" target="_blank" rel="noopener">Instagram @stupenki.brest</a></div>
+<div class="df"><p>Брест, ул. Гоголя, 59</p><a class="btn fill" href="https://www.google.com/maps/dir/?api=1&destination=%D0%91%D1%80%D0%B5%D1%81%D1%82%2C%20%D1%83%D0%BB%D0%B8%D1%86%D0%B0%20%D0%93%D0%BE%D0%B3%D0%BE%D0%BB%D1%8F%2C%2059%2C%20%D0%91%D0%B5%D0%BB%D0%B0%D1%80%D1%83%D1%81%D1%8C" target="_blank" rel="noopener">Построить маршрут</a><a href="https://www.instagram.com/stupenki.brest/" target="_blank" rel="noopener">Instagram @stupenki.brest</a></div>
 </aside>
 <div class='ov' id='ov'></div>
 <aside class='cart' id='cart' role='dialog' aria-modal='true' aria-labelledby='ct' aria-hidden='true'>
@@ -232,21 +237,23 @@ header.top .wrap{display:flex;align-items:center;gap:.8rem;min-height:64px}
 const D={
 "Кофе":[["Эспрессо","20/40 мл","4.5/5.5"],["Американо","150 мл","5.0"],["Капучино","250/350 мл","6.0/7.0"],["Флэт уайт","220 мл","7.0"],["Латте","350/450 мл","6.0/7.0"],["Раф","350 мл","7.0"],["Мокачино","250 мл","7.0"],["Гляссе","250 мл","7.0"],["Какао натуральный","250/350 мл","5.5/6.5"],["Какао шоколадный","250/350 мл","5.5/6.5"],["Горячий шоколад","250 мл","6.5"]],
 "Авторские":[["Капучино кленовый","350 мл","8.0"],["Капучино ореховый","350 мл","8.0"],["Капучино карамельный","350 мл","8.0"],["Капучино вишнёвый брауни","350 мл","8.0"],["Латте гренадин","350 мл","8.3"],["Латте баунти","350 мл","8.3"],["Латте лавандовый","350 мл","8.3"],["Латте фисташковый","350 мл","8.3"],["Раф халвичный / арахисовый","350 мл","8.5"],["Раф мята-шоколад","350 мл","8.5"],["Раф орео","350 мл","8.5"],["Раф банан-шоколад","350 мл","8.5"],["Матча зелёная / голубая","250/350 мл","7.0/8.0"]],
-"Чай":[["#","Листовой чай"],["Чёрный чай","350/700 мл","4.5/7.5"],["Зелёный чай","350/700 мл","4.5/7.5"],["Ройбуш","350/700 мл","4.5/7.5"],["Гречишный чай","350/700 мл","4.5/7.5"],["#","Чай на основе пюре"],["Чай облепиха","450 мл","8.0"],["Чай клюква","450 мл","8.0"],["Чай базилик-лимон","450 мл","8.0"],["Чай имбирь-лимон-мёд","450 мл","8.0"],["!","Наличие уточняйте у бариста"]],
+"Чай":[["#","Листовой чай"],["##","Чёрный чай"],["Манго-маракуйя","350/700 мл","4.5/7.5","","Чёрный чай: манго-маракуйя"],["Манго-малина","350/700 мл","4.5/7.5","","Чёрный чай: манго-малина"],["Таежный сбор","350/700 мл","4.5/7.5","","Чёрный чай: таежный сбор"],["Бергамот","350/700 мл","4.5/7.5","","Чёрный чай: бергамот"],["Брызги шампанского","350/700 мл","4.5/7.5","","Чёрный чай: брызги шампанского"],["С легким паром","350/700 мл","4.5/7.5","","Чёрный чай: с легким паром"],["Улун медовая дыня","350/700 мл","4.5/7.5","","Чёрный чай: улун медовая дыня"],["##","Зелёный чай"],["Молочный улун","350/700 мл","4.5/7.5","","Зелёный чай: молочный улун"],["Жасмин","350/700 мл","4.5/7.5","","Зелёный чай: жасмин"],["Ананасовый улун","350/700 мл","4.5/7.5","","Зелёный чай: ананасовый улун"],["Манговый улун","350/700 мл","4.5/7.5","","Зелёный чай: манговый улун"],["Улун клубника-дыня","350/700 мл","4.5/7.5","","Зелёный чай: улун клубника-дыня"],["Альпийский луг","350/700 мл","4.5/7.5","","Зелёный чай: альпийский луг"],["7 самураев (фруктовый)","350/700 мл","4.5/7.5","","Зелёный чай: 7 самураев (фруктовый)"],["##",""],["Ройбуш","350/700 мл","4.5/7.5","","Ройбуш"],["Гречишный чай","350/700 мл","4.5/7.5","","Гречишный чай"],["#","Чай на основе пюре"],["Облепиховый","450 мл","8.0","","Чай на основе пюре: облепиховый"],["Клюквенный","450 мл","8.0","","Чай на основе пюре: клюквенный"],["Имбирь-лимон-мёд","450 мл","8.0","","Чай на основе пюре: имбирь-лимон-мёд"],["Базилик-лимон","450 мл","8.0","","Чай на основе пюре: базилик-лимон"],["!","Наличие уточняйте у бариста"]],
 "Сезонное":[["Глинтвейн безалкогольный","450 мл","8.0"],["Капучино апельсин-шоколад","350 мл","8.0"],["Латте тыквенный пряный","350 мл","8.3"],["Латте малиновый","350 мл","8.3"],["Раф медовый","350 мл","8.5"],["Пряный чай-латте","350 мл","8.0"]],
 "Лето":[["Айс латте","","9.0"],["Бамбл: апельсин, вишня, персик","","9.0"],["Эспрессо тоник","","9.0"],["Айс мокачино","","9.0"],["Айс матча: голубая, зелёная","","9.0"],["Молочный коктейль","","9.0"],["Лимонад тропический","","9.0"],["Лимонад цитрусовый","","9.0"],["Лимонад персиковый","","9.0"],["Мохито","","9.0"],["Клубничный мохито","","9.0"],["Малина-базилик","","9.0"],["Грейпфрут-розмарин","","9.0"],["Ягодный лимонад","","9.0"]],
 "Десерты":[["!","Список десертов скоро появится."]],
 "Добавки":[["Сироп","","1.0"],["Халва / арахисовая паста","","1.5"],["Зефирки","","1.0"],["Молоко / сливки","","1.0/1.5"],["Альтернативное молоко","250/350 мл","2.5/3.5"]]};
 const tabs=document.querySelector('.tabs'),list=document.getElementById('list'),$=s=>document.querySelector(s),E=s=>String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
-const VALID=new Set(Object.entries(D).flatMap(([c,rs])=>rs.filter(r=>r[0]!=='#'&&r[0]!=='!').flatMap(r=>variants(r).map(v=>c+'|'+r[0]+'|'+v.l))));
+const VALID=new Set(Object.entries(D).flatMap(([c,rs])=>rs.filter(r=>r[0]!=='#'&&r[0]!=='!'&&r[0]!=='##').flatMap(r=>variants(r).map(v=>c+'|'+(r[4]||r[0])+'|'+v.l))));
 let cur='Кофе',cart=[];const KEY='stupenki_cart_v1';
 try{cart=(JSON.parse(localStorage.getItem(KEY))||[]).filter(i=>i&&typeof i.id==='string'&&Number.isFinite(i.p)&&Number.isInteger(i.q)&&i.q>0&&VALID.has(i.id))}catch(e){cart=[]}
+const NETLIFY_SITE='';/* адрес сайта на Netlify, например https://stupenki.netlify.app (пока не задан) */
+const ORDER_URL=NETLIFY_SITE?NETLIFY_SITE+'/.netlify/functions/order':(location.hostname.endsWith('netlify.app')?'/.netlify/functions/order':'');
 const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(cart))}catch(e){}};
 const fmt=t=>(t/10).toFixed(1)+' BYN',total=()=>cart.reduce((s,i)=>s+i.p*i.q,0),count=()=>cart.reduce((s,i)=>s+i.q,0);
 function variants(r){const p=r[2].split('/'),v=r[1].replace(' мл','').split('/'),n=r[0].split(' / ');if(p.length==1)return[{l:'',p:p[0]}];if(r[1]&&v.length==p.length)return p.map((x,i)=>({l:v[i]+' мл',p:x}));if(n.length==p.length)return p.map((x,i)=>({l:n[i],p:x}));return p.map(x=>({l:'',p:x}))}
 function show(k){cur=k;tabs.querySelectorAll('.tab').forEach(b=>b.setAttribute('aria-selected',b.dataset.k===k));
- list.innerHTML=D[k].map((r,i)=>r[0]==='#'?`<li class=gh>${r[1]}</li>`:r[0]==='!'?`<li class=nt>${r[1]}</li>`:`<li><div class=n>${r[0]}${variants(r).length==1&&r[1]?`<span class=v>${r[1]}</span>`:''}</div><div class=chips>${variants(r).map((v,j)=>`<button class=chip type=button data-i=${i} data-j=${j} aria-label="Добавить в корзину: ${r[0]} ${v.l} ${v.p}">${v.l?`<small>${v.l}</small> `:''}+ ${v.p}</button>`).join('')}</div></li>`).join('')}
-list.addEventListener('click',e=>{const b=e.target.closest('.chip');if(!b)return;const r=D[cur][b.dataset.i],v=variants(r)[b.dataset.j],id=cur+'|'+r[0]+'|'+v.l,x=cart.find(i=>i.id===id);if(x)x.q++;else cart.push({id,n:r[0],l:v.l,p:Math.round(parseFloat(v.p)*10),q:1});save();draw();b.classList.add('ok');setTimeout(()=>b.classList.remove('ok'),500)});
+ list.innerHTML=D[k].map((r,i)=>r[0]==='##'?`<li class=sh>${r[1]}</li>`:r[0]==='#'?`<li class=gh>${r[1]}</li>`:r[0]==='!'?`<li class=nt>${r[1]}</li>`:`<li><div class=n>${r[0]}${variants(r).length==1&&r[1]?`<span class=v>${r[1]}</span>`:''}</div><div class=chips>${variants(r).map((v,j)=>`<button class=chip type=button data-i=${i} data-j=${j} aria-label="Добавить в корзину: ${r[4]||r[0]} ${v.l} ${v.p}">${v.l?`<small>${v.l}</small>`:''}<span class=pr>+ ${v.p}</span></button>`).join('')}</div></li>`).join('')}
+list.addEventListener('click',e=>{const b=e.target.closest('.chip');if(!b)return;const r=D[cur][b.dataset.i],v=variants(r)[b.dataset.j],id=cur+'|'+(r[4]||r[0])+'|'+v.l,x=cart.find(i=>i.id===id);if(x)x.q++;else cart.push({id,n:r[4]||r[0],l:v.l,p:Math.round(parseFloat(v.p)*10),q:1});save();draw();b.classList.add('ok');setTimeout(()=>b.classList.remove('ok'),500)});
 function draw(){$('#cnt').textContent=count();$('#cbtn').setAttribute('aria-label','Корзина, товаров: '+count());
  $('#cbody').innerHTML=cart.length?cart.map((i,k)=>`<div class=ci><div class=t>${E(i.n)}<small>${E(i.l)}${i.l?' · ':''}${fmt(i.p)}</small></div><div class=q><button type=button data-a=dec data-k=${k} aria-label=Меньше>−</button><span>${i.q}</span><button type=button data-a=inc data-k=${k} aria-label=Больше>+</button></div><button class=rm type=button data-a=del data-k=${k} aria-label=Удалить>×</button></div>`).join(''):'<p class=empty>Корзина пуста. Добавьте напитки из меню.</p>';
  $('#tot').textContent=fmt(total());$('#cform').hidden=$('#csum').hidden=!cart.length}
@@ -257,8 +264,9 @@ function closeC(){ov.classList.remove('on');cp.classList.remove('on');cp.setAttr
 $('#cbtn').onclick=openC;$('#cx').onclick=closeC;ov.onclick=closeC;document.addEventListener('keydown',e=>{if(e.key==='Escape'&&cp.classList.contains('on'))closeC()});
 const msg=t=>{$('#msg').textContent=t};
 function orderText(){const d=new FormData($('#cform'));return 'Заказ «Ступеньки»\n'+cart.map(i=>'• '+i.n+(i.l?' ('+i.l+')':'')+' × '+i.q+' — '+fmt(i.p*i.q)).join('\n')+'\nИтого: '+fmt(total())+'\nПолучение: '+d.get('how')+'\nИмя: '+d.get('name')+'\nТелефон: '+d.get('phone')+(d.get('note')?'\nКомментарий: '+d.get('note'):'')}
-$('#cform').addEventListener('submit',async e=>{e.preventDefault();const f=$('#cform'),btn=f.querySelector('[type=submit]'),d=new FormData(f);btn.disabled=true;btn.textContent='Отправляем…';msg('');
-try{const r=await fetch('/.netlify/functions/order',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:d.get('name'),phone:d.get('phone'),how:d.get('how'),note:d.get('note'),website:d.get('website'),items:cart.map(i=>({id:i.id,q:i.q}))})});
+$('#cform').addEventListener('submit',async e=>{e.preventDefault();if(!ORDER_URL){msg('Приём заказов пока не подключён к серверу. Скопируйте заказ кнопкой ниже и отправьте кофейне.');return}
+const f=$('#cform'),btn=f.querySelector('[type=submit]'),d=new FormData(f);btn.disabled=true;btn.textContent='Отправляем…';msg('');
+try{const r=await fetch(ORDER_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:d.get('name'),phone:d.get('phone'),how:d.get('how'),note:d.get('note'),website:d.get('website'),items:cart.map(i=>({id:i.id,q:i.q}))})});
 const j=await r.json().catch(()=>({}));
 if(r.ok&&j.ok){cart=[];save();draw();f.reset();msg(j.test?'Тестовый заказ №'+j.id+' отправлен. Это проверка, кофейня его не получила.':'Заказ №'+j.id+' принят. Кофейня свяжется с вами по телефону.')}else msg('Не удалось отправить заказ. Попробуйте ещё раз или напишите нам в Instagram.')}
 catch(err){msg('Нет связи с сервером. Заказ остался в корзине, попробуйте ещё раз.')}
