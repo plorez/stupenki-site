@@ -1,3 +1,4 @@
+
 // Приём заказов: проверяет заказ и отправляет его в Telegram.
 // Секреты берутся только из настроек Netlify (переменные окружения), в коде их нет.
 const MENU = require('./menu.json'); // создаётся из меню на сайте: scripts/build-menu.js
@@ -15,13 +16,13 @@ const clean = (s, n) => String(s == null ? '' : s).replace(/[\x00-\x1f\x7f]+/g, 
 const money = (t) => (t / 10).toFixed(1) + ' BYN';
 
 exports.handler = async (event) => {
-  // Кто может отправлять заказы с другого сайта (например, с GitHub Pages). Список меняется в настройках Netlify: ALLOWED_ORIGINS.
+  // Кто может отправлять заказы с другого сайта.
   const h = event.headers || {};
   const origin = h.origin || h.Origin || '';
   const host = h.host || h.Host || '';
   const allowed = (process.env.ALLOWED_ORIGINS || 'https://plorez.github.io').split(',').map((x) => x.trim()).filter(Boolean);
   let sameOrigin = false;
-  try { sameOrigin = !!origin && new URL(origin).host === host; } catch (e) { /* игнорируем */ }
+  try { sameOrigin = !!origin && new URL(origin).host === host; } catch (e) {}
   const cors = origin && allowed.includes(origin)
     ? { 'Access-Control-Allow-Origin': origin, Vary: 'Origin', 'Access-Control-Allow-Methods': 'POST, OPTIONS', 'Access-Control-Allow-Headers': 'Content-Type' }
     : { Vary: 'Origin' };
@@ -44,7 +45,6 @@ exports.handler = async (event) => {
   try { d = JSON.parse(raw); } catch (e) { return reply(400, { ok: false, error: 'bad_json' }); }
   if (!d || typeof d !== 'object') return reply(400, { ok: false, error: 'bad_json' });
 
-  // Скрытое поле-ловушка для ботов: люди его не заполняют.
   if (d.website) return reply(200, { ok: true, id: '0000' });
 
   const name = clean(d.name, 60);
@@ -57,7 +57,7 @@ exports.handler = async (event) => {
     return reply(400, { ok: false, error: 'phone' });
   }
 
-  // Цены берём из нашего меню, а не из браузера, чтобы их нельзя было подделать.
+  // Цены берём из меню, а не из браузера.
   if (!Array.isArray(d.items) || d.items.length < 1 || d.items.length > MAX_ITEMS) {
     return reply(400, { ok: false, error: 'items' });
   }
@@ -116,5 +116,56 @@ exports.handler = async (event) => {
   } finally {
     clearTimeout(timer);
   }
-  return reply(200, { ok: true, id: orderId, test });
+
+  // Сохраняем заказ в Supabase на сервере.
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseSecret = process.env.SUPABASE_SECRET_KEY;
+  let databaseSaved = false;
+
+  if (supabaseUrl && supabaseSecret) {
+    try {
+      const savedItems = Array.from(lines.entries()).map(([id, { m, q }]) => ({
+        id,
+        name: m.n,
+        label: m.l || null,
+        quantity: q,
+        unit_price: m.p / 10,
+        line_total: (m.p * q) / 10,
+      }));
+
+      const dbRes = await fetch(`${supabaseUrl.replace(/\/$/, '')}/rest/v1/orders`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          apikey: supabaseSecret,
+          Authorization: `Bearer ${supabaseSecret}`,
+          Prefer: 'return=minimal',
+        },
+        body: JSON.stringify({
+          cafe_id: process.env.SUPABASE_CAFE_ID || '0359c9d2-d1f7-4d25-9113-c6e3a9756270',
+          customer_name: name,
+          customer_phone: phone,
+          items: savedItems,
+          total: sum / 10,
+          status: 'new',
+          pickup_method: how,
+          customer_note: note || null,
+          is_test: test,
+        }),
+      });
+
+      if (dbRes.ok) {
+        databaseSaved = true;
+      } else {
+        const info = await dbRes.text().catch(() => '');
+        console.error('Не удалось сохранить заказ в Supabase:', dbRes.status, info.slice(0, 500));
+      }
+    } catch (e) {
+      console.error('Ошибка подключения к Supabase:', e && e.name);
+    }
+  } else {
+    console.error('Не заданы NEXT_PUBLIC_SUPABASE_URL или SUPABASE_SECRET_KEY');
+  }
+
+  return reply(200, { ok: true, id: orderId, test, databaseSaved });
 };
